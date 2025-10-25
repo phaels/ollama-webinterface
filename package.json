@@ -2,7 +2,7 @@
   "name": "ollama-webinterface",
   "version": "2.0.0",
   "description": "Web Interface für Ollama mit Chat-Funktionen",
-  "main": "http://localhost:3000",
+  "main": "http://localhost:8080",
   "window": {
     "title": "Ollama Chat Interface",
     "toolbar": true,
