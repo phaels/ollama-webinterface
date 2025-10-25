@@ -1,4 +1,4 @@
-# **Ollama Web Interface - Complete Tutorial (Corrected v2.1)**
+# **Ollama Web Interface - Complete Tutorial**
 
 ## **📋 Table of Contents**
 1. Introduction
