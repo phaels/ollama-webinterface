@@ -1,10 +1,9 @@
 ### **What is this project?**
 This tutorial will guide you step-by-step through creating a **web-based chat interface** for Ollama. Instead of using the command line, you can interact with your local LLMs (Large Language Models) via a modern web browser.
-
-|**Area**|**technology**|
+technology: Node.js + Express.js, EJS (Embedded JavaScript), Bootstrap 5 + jQuery, Bootstrap Icons, Ollama (local)
 | :- | :- |
 |**backend**|Node.js + Express.js|
-|**Template Engine**|EJS (Embedded JavaScript)|
+|**Template Engine**||
 |**Frontend**|Bootstrap 5 + jQuery|
 |**Icons**|Bootstrap Icons|
 |**AI Engine**|Ollama (local)|
