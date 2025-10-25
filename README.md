@@ -221,8 +221,6 @@ Open `package.json` and replace the contents:
 }
 ```
 
-**🔴 CRITICAL:** The `"type": "module"` line is **REQUIRED** for ES6 imports!
-
 ---
 
 ## **4. Backend Development**
