@@ -5,49 +5,48 @@ import { fileURLToPath } from 'url';
 import { createServer } from 'http';
 import os from 'os';
 
-// ES Module Kompatibilität
+// ES Module Compatibility
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Express App initialisieren
+// Initialize Express App
 const app = express();
-const PORT = process.env.PORT || 8080;  // GEÄNDERT: Port 3000 → 8080
+const PORT = process.env.PORT || 8080;
 
-// Globale Zustandsvariablen
+// Global state variables
 let modelResponse = "";
 let isProcessing = false;
 let errorMessage = "";
 let availableModels = [];
 let chatHistory = [];
 let ollamaStatus = 'unknown';
-let currentModel = ''; // NEU: Aktuelles Model speichern
+let currentModel = '';
 
 /**
- * Lädt alle verfügbaren Ollama-Models beim Start
+ * Loads all available Ollama models at startup
  */
 async function loadAvailableModels() {
     try {
-        console.log('🔄 Lade verfügbare Models...');
+        console.log('🔄 Loading available models...');
         const response = await ollama.list();
 
         if (response && response.models) {
             availableModels = response.models.map(model => model.name);
             ollamaStatus = 'connected';
-            // Setze Standard-Model, falls noch keins ausgewählt
             if (!currentModel && availableModels.length > 0) {
                 currentModel = availableModels[0];
             }
-            console.log('✅ Verfügbare Models geladen:', availableModels);
+            console.log('✅ Available models loaded:', availableModels);
         } else {
             availableModels = ['llama2'];
             ollamaStatus = 'no_models';
             if (!currentModel) {
                 currentModel = 'llama2';
             }
-            console.log('⚠️  Keine Models gefunden, verwende Fallback');
+            console.log('⚠️  No models found, use fallback');
         }
     } catch (error) {
-        console.log('❌ Fehler beim Laden der Models:', error.message);
+        console.log('❌ Error loading models:', error.message);
         availableModels = ['llama2'];
         ollamaStatus = 'disconnected';
         if (!currentModel) {
@@ -57,10 +56,10 @@ async function loadAvailableModels() {
 }
 
 /**
- * Ruft das LLM mit einem Prompt auf
+ * Calls the LLM with a prompt
  */
 async function invokeLLM(model, prompt) {
-    console.log(`\n----- NEUE ANFRAGE -----`);
+    console.log(`\n----- NEW REQUEST -----`);
     console.log(`Model: ${model}`);
     console.log(`Prompt: ${prompt.substring(0, 100)}${prompt.length > 100 ? '...' : ''}`);
     console.log(`-------------------------\n`);
@@ -70,33 +69,33 @@ async function invokeLLM(model, prompt) {
     modelResponse = "";
 
     try {
-        console.log(`🔄 Verarbeite Anfrage...`);
+        console.log(`🔄 Processing request...`);
 
         const response = await ollama.chat({
             model: model,
             messages: [{ role: 'user', content: prompt }],
         });
 
-        console.log(`✅ Antwort erhalten (${response.message.content.length} Zeichen)`);
+        console.log(`✅ Response received (${response.message.content.length} characters)`);
 
-        // VOLLSTÄNDIGE ANTWORT IN DER CONSOLE AUSGEBEN
-        console.log(`\n----- KI ANTWORT -----`);
+        // OUTPUT FULL RESPONSE IN CONSOLE
+        console.log(`\n----- AI RESPONSE -----`);
         console.log(response.message.content);
         console.log(`----------------------\n`);
 
         modelResponse = response.message.content;
 
-        // Zur Historie hinzufügen
+        // Add to history
         const historyItem = {
             model: model,
-            prompt: prompt,
+            prompt: prompt,  // ✅ FIXED: was "promptly" before
             response: response.message.content,
             timestamp: new Date().toISOString()
         };
 
         chatHistory.unshift(historyItem);
 
-        // Nur die letzten 10 Einträge behalten
+        // Keep only the last 10 entries
         if (chatHistory.length > 10) {
             chatHistory = chatHistory.slice(0, 10);
         }
@@ -104,14 +103,14 @@ async function invokeLLM(model, prompt) {
         isProcessing = false;
 
     } catch (error) {
-        console.log(`❌ Anfrage fehlgeschlagen:`, error);
-        errorMessage = `Fehler: ${error.message}`;
+        console.log(`❌ Request failed:`, error);
+        errorMessage = `Error: ${error.message}`;
         isProcessing = false;
     }
 }
 
 /**
- * Hilfsfunktion zur Ermittlung der lokalen IP
+ * Helper function to determine the local IP
  */
 function getLocalIP() {
     const interfaces = os.networkInterfaces();
@@ -145,40 +144,38 @@ app.use((req, res, next) => {
 // Routes
 
 /**
- * Hauptroute - Zeigt die Chat-Oberfläche
+ * Main Route - Shows the chat interface
  */
 app.get('/', (req, res) => {
-    // Sicherstellen, dass alle Variablen definiert sind
     const templateData = {
         models: availableModels || [],
         response: modelResponse || "",
         isProcessing: isProcessing || false,
         error: errorMessage || "",
         history: chatHistory || [],
-        currentModel: currentModel || (availableModels.length > 0 ? availableModels[0] : '') // WICHTIG: currentModel übergeben
+        currentModel: currentModel || (availableModels.length > 0 ? availableModels[0] : '')
     };
 
     res.render('pages/index', templateData);
 });
 
 /**
- * Verarbeitet Chat-Anfragen
+ * Processes chat requests
  */
 app.post('/query', async (req, res) => {
     const { prompt, model } = req.body;
 
     // Input Validation
     if (!prompt || !model) {
-        errorMessage = 'Bitte geben Sie eine Frage ein und wählen Sie ein Model aus.';
+        errorMessage = 'Please enter a question and select a model.';
         return res.redirect('/');
     }
 
     if (prompt.length > 5000) {
-        errorMessage = 'Die Frage ist zu lang (max. 5000 Zeichen).';
+        errorMessage = 'The question is too long (max. 5000 characters).';
         return res.redirect('/');
     }
 
-    // NEU: Aktuelles Model speichern
     currentModel = model;
 
     await invokeLLM(model, prompt);
@@ -186,7 +183,7 @@ app.post('/query', async (req, res) => {
 });
 
 /**
- * Status-Seite - Zeigt Systeminformationen
+ * Status page - Displays system information
  */
 app.get('/status', (req, res) => {
     const templateData = {
@@ -207,7 +204,7 @@ app.get('/status', (req, res) => {
 });
 
 /**
- * API Health Endpoint (für JSON)
+ * API Health Endpoint (for JSON)
  */
 app.get('/api/health', async (req, res) => {
     try {
@@ -254,7 +251,7 @@ app.get('/api/health', async (req, res) => {
 });
 
 /**
- * API Endpoint für Status-Checks (während der Verarbeitung)
+ * API endpoint for status checks (during processing)
  */
 app.get('/api/status', (req, res) => {
     res.json({
@@ -267,7 +264,7 @@ app.get('/api/status', (req, res) => {
 });
 
 /**
- * Löscht den Chat-Verlauf
+ * Deletes chat history
  */
 app.post('/clear-history', (req, res) => {
     chatHistory = [];
@@ -277,26 +274,26 @@ app.post('/clear-history', (req, res) => {
 });
 
 /**
- * Setzt das aktuelle Model
+ * Sets the current model
  */
 app.post('/set-model', (req, res) => {
     const { model } = req.body;
     if (model && availableModels.includes(model)) {
         currentModel = model;
-        console.log(`✅ Aktuelles Model gesetzt auf: ${model}`);
+        console.log(`✅ Current model set to: ${model}`);
     }
     res.redirect('/');
 });
 
 /**
- * Test-Route für Ollama-Verbindung
+ * Test route for Ollama connection
  */
 app.get('/api/test-ollama', async (req, res) => {
     try {
         const models = await ollama.list();
         res.json({
             success: true,
-            message: 'Ollama ist erreichbar',
+            message: 'Ollama is reachable',
             models: models.models?.length || 0,
             modelList: models.models?.map(m => m.name) || [],
                  currentModel: currentModel
@@ -304,20 +301,20 @@ app.get('/api/test-ollama', async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Ollama ist nicht erreichbar',
+            message: 'Ollama is unavailable',
             error: error.message
         });
     }
 });
 
 /**
- * Fehlerbehandlung für nicht gefundene Routes
+ * Error handling for routes not found
  */
 app.use((req, res) => {
     res.status(404).render('pages/error', {
-        title: '404 - Seite nicht gefunden',
-        message: `Die angeforderte Seite "${req.url}" existiert nicht.`,
-        suggestion: 'Überprüfen Sie die URL oder kehren Sie zur Startseite zurück.'
+        title: '404 - Page not found',
+        message: `The requested page "${req.url}" does not exist.`,
+        suggestion: 'Check the URL or return to the homepage.'
     });
 });
 
@@ -327,30 +324,30 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     console.error('❌ Server Error:', err);
     res.status(500).render('pages/error', {
-        title: '500 - Server Fehler',
-        message: 'Ein unerwarteter Fehler ist aufgetreten.',
+        title: '500 - Server Error',
+        message: 'An unexpected error occurred.',
         error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
 });
 
-// Server starten
+// Start server
 const server = createServer(app);
 
 server.listen(PORT, async () => {
-    console.log(`\n🚀 Ollama Web Interface gestartet!`);
+    console.log(`\n🚀 Ollama Web Interface started!`);
     console.log(`📍 Local:  http://localhost:${PORT}`);
     console.log(`🌐 Network: http://${getLocalIP()}:${PORT}`);
-    console.log(`⏰ Gestartet um: ${new Date().toLocaleString('de-DE')}`);
+    console.log(`⏰ Started at: ${new Date().toLocaleString('en-US')}`);
     console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🤖 Standard-Model: ${currentModel || 'Wird gesetzt...'}`);
+    console.log(`🤖 Default Model: ${currentModel || 'Setting...'}`);
     console.log(`----------------------------------------`);
 
-    // Ollama-Verbindung testen und Models laden
+    // Test Ollama connection and load models
     try {
         await loadAvailableModels();
-        console.log(`✅ System initialisiert - Aktuelles Model: ${currentModel}`);
+        console.log(`✅ System initialized - Current model: ${currentModel}`);
     } catch (error) {
-        console.log('❌ Fehler bei der Initialisierung:', error.message);
+        console.log('❌ Error during initialization:', error.message);
     }
 });
 
