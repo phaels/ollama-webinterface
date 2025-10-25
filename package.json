@@ -25,7 +25,7 @@
     "llm",
     "desktop"
   ],
-  "author": "Imle, Martin",
+  "author": "I m l e, Martin",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2",
