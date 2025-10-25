@@ -1,5 +1,5 @@
+<img width="2013" height="1122" alt="Bildschirmfoto_20251025_190122" src="https://github.com/user-attachments/assets/f679332c-e854-40a5-ae83-532c09f6fdb5" />
 
-<img width="2014" height="1127" alt="Bildschirmfoto_20251025_190122" src="https://github.com/user-attachments/assets/484842ca-15ac-4420-b62c-c7d0b05b398e" />
 
 # **Ollama Web Interface - Complete Tutorial**
 
