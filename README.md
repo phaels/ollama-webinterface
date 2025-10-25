@@ -1,5 +1,12 @@
 # ollama-webinterface
 This tutorial will guide you step-by-step through creating a web-based chat interface for Ollama. Instead of using the command line, you can interact with your local LLMs (Large Language Models) via a modern web browser.
+|**Area**|**technology**|
+| :- | :- |
+|**backend**|Node.js + Express.js|
+|**Template Engine**|EJS (Embedded JavaScript)|
+|**Frontend**|Bootstrap 5 + jQuery|
+|**Icons**|Bootstrap Icons|
+|**AI Engine**|Ollama (local)|
 
 # **Ollama Web Interface - Complete Tutorial**
 ## **📋 Table of Contents**
@@ -23,13 +30,6 @@ Support my open source work on PayPal: m.imle@gmx.net
 - ` `**Error handling** and status display
 ### **Technology stack 🛠️**
 
-|**Area**|**technology**|
-| :- | :- |
-|**backend**|Node.js + Express.js|
-|**Template Engine**|EJS (Embedded JavaScript)|
-|**Frontend**|Bootstrap 5 + jQuery|
-|**Icons**|Bootstrap Icons|
-|**AI Engine**|Ollama (local)|
 ## **2. Requirements**
 ### **2.1 Ollama Installation**
 **Windows:**
