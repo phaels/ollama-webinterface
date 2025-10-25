@@ -14,6 +14,16 @@ technology: Node.js + Express.js, EJS (Embedded JavaScript), Bootstrap 5 + jQuer
 1. Troubleshooting
 ## **1. Introduction**
 
+### **Technology stack 🛠️**
+
+|**Area**|**technology**|
+| :- | :- |
+|**backend**|Node.js + Express.js|
+|**Template Engine**|EJS (Embedded JavaScript)|
+|**Frontend**|Bootstrap 5 + jQuery|
+|**Icons**|Bootstrap Icons|
+|**AI Engine**|Ollama (local)|
+
 Support my open source work on PayPal: m.imle@gmx.net
 ### **Key Features**
 - ` `**Model selection** from all installed Ollama models
