@@ -20,8 +20,6 @@
 ### **What is this project?**
 This tutorial will guide you step-by-step through creating a **web-based chat interface** for Ollama. Instead of using the command line, you can interact with your local LLMs (Large Language Models) via a modern web browser.
 
-**Support my open source work on PayPal:** m.imle@gmx.net
-
 ### **Key Features**
 - ✅ **Model selection** from all installed Ollama models
 - ✅ **Real-time chat** with local LLMs
