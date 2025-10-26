@@ -1,7 +1,6 @@
-<img width="2013" height="1122" alt="Bildschirmfoto_20251025_190122" src="https://github.com/user-attachments/assets/f679332c-e854-40a5-ae83-532c09f6fdb5" />
-
-
 # **Ollama Web Interface - Complete Tutorial**
+
+<img width="2013" height="1122" alt="Bildschirmfoto_20251025_190122" src="https://github.com/user-attachments/assets/f679332c-e854-40a5-ae83-532c09f6fdb5" />
 
 ## **📋 Table of Contents**
 1. Introduction
